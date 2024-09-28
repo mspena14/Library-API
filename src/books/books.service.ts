@@ -37,6 +37,14 @@ export class BooksService {
       query.andWhere('book.publicationDate = :publicationDate', { publicationDate: params.publicationDate })
     }
 
+    if (params.skip) {
+      query.skip(params.skip)
+    }  
+    
+    if (params.take) {
+      query.take(params.take);
+    }
+
     return query
   }
 }
