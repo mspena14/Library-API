@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { Book } from './entities/book.entity';
+import { FindAllBooksParamsDto } from './dto/find-all-books-params.dto';
 
 @Controller('books')
 export class BooksController {
@@ -12,7 +13,7 @@ export class BooksController {
   }
 
   @Get()
-  findAllBooks(): Promise<Book[]> {
-    return this.booksService.findAllBooks();
+  findAllBooks(@Query() params: FindAllBooksParamsDto): Promise<Book[]> {
+    return this.booksService.findAllBooks(params);
   }
 }
