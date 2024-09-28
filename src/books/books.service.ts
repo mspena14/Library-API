@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Book } from './entities/book.entity';
 import { Repository } from 'typeorm';
@@ -9,8 +9,14 @@ export class BooksService {
   constructor(
     @InjectRepository(Book) private readonly bookRepository: Repository<Book>,
   ) {}
-  createBook(createBookData: CreateBookDto): Promise<CreateBookDto> {
+  async createBook(createBookData: CreateBookDto): Promise<CreateBookDto> {
     const bookCreated = this.bookRepository.create(createBookData);
-    return this.bookRepository.save(bookCreated);
+    return await this.bookRepository.save(bookCreated);
+  }
+
+  async findAllBooks(): Promise<Book[]>{
+    const books = await this.bookRepository.find()
+    if (books.length === 0) throw new NotFoundException("Books not found")
+    return books;
   }
 }
