@@ -1,5 +1,5 @@
 import { UpdateBookDto } from './dto/update-book.dto';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Book } from './entities/book.entity';
 import { Repository, SelectQueryBuilder } from 'typeorm';
@@ -14,6 +14,7 @@ export class BooksService {
   ) {}
   async createBook(createBookData: CreateBookDto): Promise<CreateBookDto> {
     const bookCreated = this.bookRepository.create(createBookData);
+    if(!bookCreated) throw new BadRequestException("There was a error creating the book")
     return await this.bookRepository.save(bookCreated);
   }
 
@@ -25,17 +26,22 @@ export class BooksService {
   }
 
   async findOneBookById(id: number): Promise<Book> {
-    const book = await this.bookRepository.findOne({where: {id}});
-    if (!book) throw new NotFoundException("Book not found")
+    const book = await this.checkIfExists(id)
     return book;
   }
 
   async updateBookById(id: number, updateBookData:UpdateBookDto ): Promise<Book> {
-    const bookFound = await this.findOneBookById(id);
-    if (!bookFound) throw new NotFoundException("Book not found")
+    const bookFound = await this.checkIfExists(id);
     const bookUpdated = Object.assign(bookFound, updateBookData)
     return this.bookRepository.save(bookUpdated);
   }
+
+  async removeBookById(id: number) {
+    const bookFound = await this.checkIfExists(id);
+    await this.bookRepository.softRemove(bookFound);
+    return 'Book deleted successfully'
+  }
+
   validateParamsForFindAll(params: FindAllBooksParamsDto): SelectQueryBuilder<Book> {
     const query = this.bookRepository.createQueryBuilder('book')
     if (params.author) {
@@ -59,5 +65,11 @@ export class BooksService {
     }
 
     return query
+  }
+
+  async checkIfExists(id: number) {
+    const book = await this.bookRepository.findOne({where: {id}});
+    if (!book) throw new NotFoundException("Book not found");
+    return book
   }
 }
