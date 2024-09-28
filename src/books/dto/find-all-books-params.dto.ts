@@ -4,13 +4,13 @@ import { findAllBooksPaginationDto } from './find-all-books-pagination.fto';
 export class FindAllBooksParamsDto extends findAllBooksPaginationDto {
   @IsOptional()
   @IsString()
-  author!: string;
+  author?: string;
 
   @IsOptional()
   @IsDateString()
-  publicationDate!: Date;
+  publicationDate?: Date;
 
   @IsOptional()
   @IsString()
-  genre!: string;
+  genre?: string;
 }
