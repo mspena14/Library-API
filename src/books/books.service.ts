@@ -23,6 +23,11 @@ export class BooksService {
     return books;
   }
 
+  async findOneBookById(id: number): Promise<Book> {
+    const book = await this.bookRepository.findOne({where: {id}});
+    if (!book) throw new NotFoundException("Book not found")
+    return book;
+  }
   validateParamsForFindAll(params: FindAllBooksParamsDto): SelectQueryBuilder<Book> {
     const query = this.bookRepository.createQueryBuilder('book')
     if (params.author) {
