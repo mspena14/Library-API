@@ -1,3 +1,4 @@
+import { UpdateBookDto } from './dto/update-book.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Book } from './entities/book.entity';
@@ -27,6 +28,13 @@ export class BooksService {
     const book = await this.bookRepository.findOne({where: {id}});
     if (!book) throw new NotFoundException("Book not found")
     return book;
+  }
+
+  async updateBookById(id: number, updateBookData:UpdateBookDto ): Promise<Book> {
+    const bookFound = await this.findOneBookById(id);
+    if (!bookFound) throw new NotFoundException("Book not found")
+    const bookUpdated = Object.assign(bookFound, updateBookData)
+    return this.bookRepository.save(bookUpdated);
   }
   validateParamsForFindAll(params: FindAllBooksParamsDto): SelectQueryBuilder<Book> {
     const query = this.bookRepository.createQueryBuilder('book')
