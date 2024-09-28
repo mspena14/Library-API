@@ -11,10 +11,11 @@ import { BooksModule } from './books/books.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
-      port: 27447,
+      port: parseInt(process.env.DB_PORT ?? "27447", 10) ,
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: false,
       ssl: {
         rejectUnauthorized: true,
