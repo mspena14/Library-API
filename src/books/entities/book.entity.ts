@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('Books')
 export class Book {
@@ -16,4 +16,13 @@ export class Book {
 
   @Column({type: 'text'})
   genre!: string;
+
+  @CreateDateColumn({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
+  created_at!: Date;
+
+  @UpdateDateColumn({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
+  updated_at!: Date;
+
+  @DeleteDateColumn({type: 'timestamp', default: null})
+  deleted_at!: Date;
 }
