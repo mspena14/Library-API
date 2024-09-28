@@ -1,19 +1,19 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('Slots')
+@Entity('Books')
 export class Book {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
+  @Column({type: 'text'})
   title!: string;
 
-  @Column()
+  @Column({type: 'text'})
   author!: string;
 
-  @Column()
+  @Column({type: 'date'})
   publicationDate!: Date;
 
-  @Column()
+  @Column({type: 'text'})
   genre!: string;
 }
