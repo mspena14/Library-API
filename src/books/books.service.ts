@@ -36,7 +36,7 @@ export class BooksService {
     return this.bookRepository.save(bookUpdated);
   }
 
-  async removeBookById(id: number) {
+  async removeBookById(id: number): Promise<string> {
     const bookFound = await this.checkIfExists(id);
     await this.bookRepository.softRemove(bookFound);
     return 'Book deleted successfully'
